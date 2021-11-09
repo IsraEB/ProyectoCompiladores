@@ -247,7 +247,7 @@ public class ParserSLR1 {
 
 	public static void main(String argumento[]) {
 		try {
-			Entrada = argumento[0] + ".LA1";
+			Entrada = argumento[0] + ".FT1";
 		} catch (Exception e) {
 			System.out.println("\7Error en el archivo de entrada");
 			System.exit(4);
@@ -261,7 +261,7 @@ public class ParserSLR1 {
 		lee_token(xArchivo(Entrada));
 		do {
 			print_pila();
-			pausa();
+			// pausa();
 			S = pila[tope];
 			System.out.print("[" + S + "] con [" + a + "(" + LEXEMA + ")] ");
 			if (m[Integer.parseInt(S)][terminal(a)] == 3000) {
@@ -269,13 +269,13 @@ public class ParserSLR1 {
 				System.exit(0);
 			} else if (m[Integer.parseInt(S)][terminal(a)] > 0) {
 				System.out.println("Shift (" + m[Integer.parseInt(S)][terminal(a)] + ")");
-				pausa();
+				// pausa();
 				push(a);
 				push(m[Integer.parseInt(S)][terminal(a)] + "");
 				lee_token(xArchivo(Entrada));
 			} else if (m[Integer.parseInt(S)][terminal(a)] < 0) {
 				System.out.println("Reduce (" + m[Integer.parseInt(S)][terminal(a)] + ")");
-				pausa();
+				// pausa();
 				for (int i = 1; i <= lpd[m[Integer.parseInt(S)][terminal(a)] * (-1)] * 2; i++) {
 					pop();
 				}
@@ -289,6 +289,8 @@ public class ParserSLR1 {
 			} else {
 				rut_error();
 			}
+
+			System.out.println();
 
 		} while (true);
 		// System.out.println("Termino el parse SL(1)");
