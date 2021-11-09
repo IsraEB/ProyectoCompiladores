@@ -529,7 +529,7 @@ public class AnalizadorLexicografico {
 	public static void main(String argumento[]) {
 
 		try {
-			Entrada = argumento[0] + ".LA";
+			Entrada = argumento[0] + ".FTE";
 		} catch (Exception e) {
 			System.out.println("Error en el archivo de entrada");
 			System.exit(4);
@@ -539,7 +539,7 @@ public class AnalizadorLexicografico {
 			System.exit(4);
 		}
 
-		Salida = argumento[0] + ".LA1";
+		Salida = argumento[0] + ".FT1";
 
 		new File(Salida).delete();
 

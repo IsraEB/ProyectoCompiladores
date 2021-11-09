@@ -8,18 +8,20 @@
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 
 /**
  *
  * @author mari2
  */
-public class ParserSLR1 {
+public class ParserSLR1Generador {
 
 	static String pila[] = new String[10000];
 	static int tope = -1;
-	static String a, LEXEMA, RENGLON, tipoNumero, Entrada, S, e;
+	static String a, LEXEMA, RENGLON, tipoNumero, Entrada, Salida, S, e;
 	static int Posicion = 0;
 	static String nt[] = new String[13];
 	static String t[] = new String[25];
@@ -81,6 +83,18 @@ public class ParserSLR1 {
 			fr.close();
 		} catch (IOException e) {
 			System.out.println("Error");
+		}
+	}
+
+	public static boolean creaEscribeArchivo(File xFile, String mensaje) {
+		try {
+			PrintWriter fileOut = new PrintWriter(new FileWriter(xFile, true));
+			fileOut.println(mensaje);
+			fileOut.close();
+			return true;
+
+		} catch (IOException ex) {
+			return false;
 		}
 	}
 
@@ -607,6 +621,8 @@ public class ParserSLR1 {
 		}
 		push("0");
 
+		Salida = argumento[0] + ".FT2";
+
 		lee_token(xArchivo(Entrada));
 		do {
 			print_pila();
@@ -622,10 +638,14 @@ public class ParserSLR1 {
 					// pausa();
 					push(a);
 					push(m[Integer.parseInt(S)][terminal(a)] + "");
+					GC_SHIFT(m[Integer.parseInt(S)][terminal(a)]);
 					lee_token(xArchivo(Entrada));
 				} else {
 					if (m[Integer.parseInt(S)][terminal(a)] < 0) {
 						System.out.println("Reduce (" + m[Integer.parseInt(S)][terminal(a)] + ")");
+
+						GC_REDUCE(m[Integer.parseInt(S)][terminal(a)]);
+
 						// pausa();
 						for (int i = 1; i <= lpd[m[Integer.parseInt(S)][terminal(a)] * (-1)]; i++) {
 							pop();
@@ -647,6 +667,101 @@ public class ParserSLR1 {
 			System.out.println();
 
 		} while (true);
+		// System.out.println("Termino el parse SL(1)");
 
+	}
+
+	// Generación de código
+
+	// Tabla de símbolos
+	static int iSYM = -1;
+	static String VAR[] = new String[1000];
+	static String TIPO[] = new String[1000];
+	static String Tipo;
+
+	static String VAL;
+
+	// Variables para las reducciones
+	static String DUMP_cod = "";
+	static String INST_cod = "";
+	static String BLQ_cod = "";
+
+	public static void GC_SHIFT(int X) {
+		switch (X) {
+		case 3:
+			Tipo = "ent";
+			break;
+		case 4:
+			Tipo = "flot";
+			break;
+		case 6:
+			if (!(existe(LEXEMA))) {
+				creaEscribeArchivo(xArchivo(Salida), "doblep\t" + LEXEMA);
+				creaRenglonDeLaTabla(LEXEMA, Tipo);
+			} else {
+				System.out.println("Error semántico, variable duplicada (" + RENGLON + ", " + LEXEMA + ")");
+				System.exit(4);
+			}
+			break;
+		case 7:
+			if (!(existe(LEXEMA))) {
+				creaEscribeArchivo(xArchivo(Salida), "doblep\t" + LEXEMA);
+				creaRenglonDeLaTabla(LEXEMA, Tipo);
+			} else {
+				System.out.println("Error semántico, variable duplicada (" + RENGLON + ", " + LEXEMA + ")");
+				System.exit(4);
+			}
+			break;
+		case 22:
+			if (tipoNumero.equals("ent")) {
+				VAL = LEXEMA;
+
+			} else {
+				System.out.println("Error semántico, instrucción muestra debe recibir un entero (" + RENGLON + ", "
+						+ LEXEMA + ")");
+				System.exit(4);
+			}
+			break;
+		}
+	}
+
+	public static void GC_REDUCE(int X) {
+		switch (X) {
+		case -6:
+			BLQ_cod = INST_cod;
+			System.out.println(BLQ_cod);
+			break;
+		case -9:
+			INST_cod = DUMP_cod;
+			System.out.println(INST_cod);
+			break;
+		case -10:
+			DUMP_cod = "vuel\t" + VAL;
+			System.out.println(DUMP_cod);
+			break;
+		}
+	}
+
+	public static void creaRenglonDeLaTabla(String Variable, String Tipo) {
+		iSYM++;
+		VAR[iSYM] = Variable;
+		TIPO[iSYM] = Tipo;
+	}
+
+	public static boolean existe(String Variable) {
+		for (int i = 0; i <= iSYM; i++) {
+			if (VAR[i].equals(Variable)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public static void printTabla() {
+		System.out.println("i\tVAR\tTIPO");
+		System.out.println("==================================");
+		for (int i = 0; i <= iSYM; i++) {
+			System.out.println(i + "\t" + VAR[i] + "\t" + TIPO[i]);
+		}
 	}
 }
