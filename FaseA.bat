@@ -10,7 +10,7 @@ IF errorlevel 1 GOTO FALLLO
 
 echo Analizador Lexicografico Terminado
 
-java ParserSLR1.java %1
+java ParserSLR1Generador.java %1
 
 IF errorlevel 1 GOTO FALLLO
 

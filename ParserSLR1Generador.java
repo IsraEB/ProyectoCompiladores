@@ -664,6 +664,8 @@ public class ParserSLR1Generador {
 				}
 			}
 
+			System.out.println();
+
 		} while (true);
 		// System.out.println("Termino el parse SL(1)");
 
