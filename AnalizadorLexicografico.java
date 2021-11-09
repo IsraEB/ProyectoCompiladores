@@ -460,7 +460,7 @@ public class AnalizadorLexicografico {
 				} else if (c == '=') {
 					ESTADO = 39;
 				} else {
-					ESTADO = 43;
+					ESTADO = 40;
 				}
 				break;
 			case 38:
