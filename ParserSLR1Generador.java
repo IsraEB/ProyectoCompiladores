@@ -725,16 +725,17 @@ public class ParserSLR1Generador {
 
 	public static void GC_REDUCE(int X) {
 		switch (X) {
-		// case -4:
-
-		// break;
-		// case -6:
-		// break;
+		case -6:
+			BLQ_cod = INST_cod;
+			System.out.println(BLQ_cod);
+			break;
+		case -9:
+			INST_cod = DUMP_cod;
+			System.out.println(INST_cod);
+			break;
 		case -10:
 			DUMP_cod = "vuel\t" + VAL;
-			creaEscribeArchivo(xArchivo(Salida), DUMP_cod);
 			System.out.println(DUMP_cod);
-			pausa();
 			break;
 		}
 	}
