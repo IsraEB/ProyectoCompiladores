@@ -1,7 +1,7 @@
 entero Suma27   // variable para el total
 entero a   // variable para el total
 entero b   // variable para el total
-flotante X11 
+flotante X11
 
 /* Este es un [programa de prueba
 es el primero que hago*/
@@ -16,6 +16,6 @@ comienza
 		finsi
 		Suma27 := (36.12 + Hola)/17
 	finsi
-	X11 := 14 + Suma27 / 25.12  
+	X11 := 14 + Suma27 / 25.12
 	muestra 2000
 termina
