@@ -1,6 +1,9 @@
 @Echo Off
-clsdel %1.FT1 2>nul
-java AnalizadorLexicografico%1
+cls
+del %1.FT1 2>nul
+del %1.FT2 2>nul
+java AnalizadorLexicografico %1
+
 IF errorlevel 1 GOTO FALLO
 echo Analizador Lexicografico Terminado
 echo [
@@ -18,5 +21,5 @@ ECHO[
 ECHO compilacion terminada
 ECHO[
 ECHO[
-REM del %1.FT1 2>nul
+del %1.FT1 2>nul
 :SALIR
