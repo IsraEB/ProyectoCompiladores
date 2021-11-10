@@ -1,4 +1,3 @@
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -460,7 +459,7 @@ public class AnalizadorLexicografico {
 				} else if (c == '=') {
 					ESTADO = 39;
 				} else {
-					ESTADO = 43;
+					ESTADO = 40;
 				}
 				break;
 			case 38:
@@ -529,7 +528,7 @@ public class AnalizadorLexicografico {
 	public static void main(String argumento[]) {
 
 		try {
-			Entrada = argumento[0] + ".LA";
+			Entrada = argumento[0] + ".FTE";
 		} catch (Exception e) {
 			System.out.println("Error en el archivo de entrada");
 			System.exit(4);
@@ -538,10 +537,7 @@ public class AnalizadorLexicografico {
 			System.out.println("El archivo [" + Entrada + "] no existe");
 			System.exit(4);
 		}
-
-		Salida = argumento[0] + ".LA1";
-
-		new File(Salida).delete();
+		Salida = argumento[0] + ".FT1";
 
 		linea = abreLeeCierra(Entrada);
 		while (!fin_archivo) {

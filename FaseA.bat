@@ -1,25 +1,26 @@
 @Echo Off
-cls
-del %1.FT1 2>nul
-del %1.FT2 2>nul
-java AnalizadorLexicografico %1
+CLS
 
-IF errorlevel 1 GOTO FALLO
+del %1.FT2 2> nul
+del %1.FT1 2> nul
+
+java AnalizadorLexicografico.java %1
+
+IF errorlevel 1 GOTO FALLLO
+
 echo Analizador Lexicografico Terminado
-echo [
-java SLR1 %1
-IF errorlevel 1 GOTO FALLO
-echo SLR1 Terminado
-echo [
-GOTO FIN 
-:FALLO
-echo[
-ECHO errores en la compilacion!
-ECHO[
+
+java ParserSLR1Generador.java %1
+
+IF errorlevel 1 GOTO FALLLO
+
+echo Analisis sintactico SLR(1) Terminado
+GOTO FIN
+
+:FALLLO
+ECHO ERRORES EN LLA COMPILACION!!!
+
 :FIN
-ECHO[
-ECHO compilacion terminada
-ECHO[
-ECHO[
-del %1.FT1 2>nul
-:SALIR
+ECHO COMPILLACION TERMINADA
+
+:SALLIR

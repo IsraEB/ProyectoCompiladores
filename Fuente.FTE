@@ -1,0 +1,21 @@
+entero Suma27   // variable para el total
+entero a   // variable para el total
+entero b   // variable para el total
+flotante X11
+
+/* Este es un [programa de prueba
+es el primero que hago*/
+
+comienza
+	muestra 7000
+	si(25+11 <> (13*12)/(a+34))entonces
+		si(Hola > Adios) entonces
+			muestra 7000
+		otro
+			X := 17
+		finsi
+		Suma27 := (36.12 + Hola)/17
+	finsi
+	X11 := 14 + Suma27 / 25.12
+	muestra 2000
+termina
