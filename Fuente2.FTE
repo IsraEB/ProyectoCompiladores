@@ -1,0 +1,9 @@
+entero Suma27 //variable para el total
+entero A //variable para el total
+entero BASE//variable para el total
+flotante X11
+
+/*Programa de prueba*/
+comienza
+	a:=3
+termina
