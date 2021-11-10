@@ -1,4 +1,3 @@
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -538,10 +537,7 @@ public class AnalizadorLexicografico {
 			System.out.println("El archivo [" + Entrada + "] no existe");
 			System.exit(4);
 		}
-
 		Salida = argumento[0] + ".FT1";
-
-		new File(Salida).delete();
 
 		linea = abreLeeCierra(Entrada);
 		while (!fin_archivo) {

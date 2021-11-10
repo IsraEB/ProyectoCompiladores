@@ -1,20 +1,9 @@
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-/**
- *
- * @author mari2
- */
 public class ParserSLR1 {
 
 	static String pila[] = new String[10000];
@@ -610,7 +599,7 @@ public class ParserSLR1 {
 		lee_token(xArchivo(Entrada));
 		do {
 			print_pila();
-			// pausa();
+
 			S = pila[tope];
 			System.out.print("[" + S + "] con [" + a + "(" + LEXEMA + ")] ");
 			if (m[Integer.parseInt(S)][terminal(a)] == 3000) {
@@ -619,14 +608,14 @@ public class ParserSLR1 {
 			} else {
 				if (m[Integer.parseInt(S)][terminal(a)] > 0) {
 					System.out.println("Shift (" + m[Integer.parseInt(S)][terminal(a)] + ")");
-					// pausa();
+
 					push(a);
 					push(m[Integer.parseInt(S)][terminal(a)] + "");
 					lee_token(xArchivo(Entrada));
 				} else {
 					if (m[Integer.parseInt(S)][terminal(a)] < 0) {
 						System.out.println("Reduce (" + m[Integer.parseInt(S)][terminal(a)] + ")");
-						// pausa();
+
 						for (int i = 1; i <= lpd[m[Integer.parseInt(S)][terminal(a)] * (-1)]; i++) {
 							pop();
 						}

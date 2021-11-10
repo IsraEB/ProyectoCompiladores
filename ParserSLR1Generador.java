@@ -1,10 +1,3 @@
-
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -13,10 +6,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 
-/**
- *
- * @author mari2
- */
 public class ParserSLR1Generador {
 
 	static String pila[] = new String[10000];
@@ -619,14 +608,14 @@ public class ParserSLR1Generador {
 			System.out.println("\7El archivo [" + Entrada + "] no existe");
 			System.exit(4);
 		}
-		push("0");
-
 		Salida = argumento[0] + ".FT2";
+
+		push("0");
 
 		lee_token(xArchivo(Entrada));
 		do {
 			print_pila();
-			// pausa();
+
 			S = pila[tope];
 			System.out.print("[" + S + "] con [" + a + "(" + LEXEMA + ")] ");
 			if (m[Integer.parseInt(S)][terminal(a)] == 3000) {
@@ -635,7 +624,7 @@ public class ParserSLR1Generador {
 			} else {
 				if (m[Integer.parseInt(S)][terminal(a)] > 0) {
 					System.out.println("Shift (" + m[Integer.parseInt(S)][terminal(a)] + ")");
-					// pausa();
+
 					push(a);
 					push(m[Integer.parseInt(S)][terminal(a)] + "");
 					GC_SHIFT(m[Integer.parseInt(S)][terminal(a)]);
@@ -646,7 +635,6 @@ public class ParserSLR1Generador {
 
 						GC_REDUCE(m[Integer.parseInt(S)][terminal(a)]);
 
-						// pausa();
 						for (int i = 1; i <= lpd[m[Integer.parseInt(S)][terminal(a)] * (-1)]; i++) {
 							pop();
 						}
@@ -667,7 +655,6 @@ public class ParserSLR1Generador {
 			System.out.println();
 
 		} while (true);
-		// System.out.println("Termino el parse SL(1)");
 
 	}
 
