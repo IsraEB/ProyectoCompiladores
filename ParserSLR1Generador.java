@@ -666,12 +666,15 @@ public class ParserSLR1Generador {
 	static String TIPO[] = new String[1000];
 	static String Tipo;
 
-	static String VAL;
+	static String VAL = "";
 
 	// Variables para las reducciones
-	static String DUMP_cod = "";
-	static String INST_cod = "";
-	static String BLQ_cod = "";
+	static String DUMP_cod[] = new String[100];
+	static int tDUMP_cod = -1;
+	static String INST_cod[] = new String[100];
+	static int tINST_cod = -1;
+	static String BLQ_cod[] = new String[100];
+	static int tBLQ_cod = -1;
 
 	public static void GC_SHIFT(int X) {
 		switch (X) {
@@ -682,17 +685,10 @@ public class ParserSLR1Generador {
 			Tipo = "flot";
 			break;
 		case 6:
-			if (!(existe(LEXEMA))) {
-				creaEscribeArchivo(xArchivo(Salida), "doblep\t" + LEXEMA);
-				creaRenglonDeLaTabla(LEXEMA, Tipo);
-			} else {
-				System.out.println("Error semántico, variable duplicada (" + RENGLON + ", " + LEXEMA + ")");
-				System.exit(4);
-			}
-			break;
 		case 7:
 			if (!(existe(LEXEMA))) {
-				creaEscribeArchivo(xArchivo(Salida), "doblep\t" + LEXEMA);
+				VAL = VAL + "doblep\t" + LEXEMA + "\r\n";
+				System.out.println("[" + VAL + "]");
 				creaRenglonDeLaTabla(LEXEMA, Tipo);
 			} else {
 				System.out.println("Error semántico, variable duplicada (" + RENGLON + ", " + LEXEMA + ")");
@@ -714,17 +710,19 @@ public class ParserSLR1Generador {
 
 	public static void GC_REDUCE(int X) {
 		switch (X) {
+		case -5:
+			break;
 		case -6:
-			BLQ_cod = INST_cod;
-			System.out.println(BLQ_cod);
+			BLQ_cod[++tBLQ_cod] = INST_cod[tINST_cod--];
+			System.out.println(BLQ_cod[tBLQ_cod]);
 			break;
 		case -9:
-			INST_cod = DUMP_cod;
-			System.out.println(INST_cod);
+			INST_cod[++tINST_cod] = DUMP_cod[tDUMP_cod--];
+			System.out.println(INST_cod[tINST_cod]);
 			break;
 		case -10:
-			DUMP_cod = "vuel\t" + VAL;
-			System.out.println(DUMP_cod);
+			DUMP_cod[++tDUMP_cod] = "vuel\t" + VAL;
+			System.out.println(DUMP_cod[tDUMP_cod]);
 			break;
 		}
 	}
