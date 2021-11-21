@@ -662,11 +662,13 @@ public class ParserSLR1Generador {
 
 	// Tabla de símbolos
 	static int iSYM = -1;
-	static String VAR[] = new String[1000];
-	static String TIPO[] = new String[1000];
-	static String Tipo;
+	static String SymVAR[] = new String[1000];
+	static String SymTIPO[] = new String[1000];
 
+	// Variables para generar código en el shift
+	static String TIPO = "";
 	static String VAL = "";
+	static String LVAR = "";
 
 	// Variables para las reducciones
 	static String DUMP_cod[] = new String[100];
@@ -675,23 +677,38 @@ public class ParserSLR1Generador {
 	static int tINST_cod = -1;
 	static String BLQ_cod[] = new String[100];
 	static int tBLQ_cod = -1;
+	static String VARS_cod[] = new String[100];
+	static int tVARS_cod = -1;
+	static String PROG_cod[] = new String[100];
+	static int tPROG_cod = -1;
+	static String F_cod[] = new String[100];
+	static int tF_cod = -1;
+	static String T_cod[] = new String[100];
+	static int tT_cod = -1;
+	static String E_cod[] = new String[100];
+	static int tE_cod = -1;
+	static String ASIG_cod[] = new String[100];
+	static int tASIG_cod = -1;
+
+	// Variables temporales
+	static String Temp0 = "";
 
 	public static void GC_SHIFT(int X) {
 		switch (X) {
 		case 3:
-			Tipo = "ent";
+			TIPO = "ent";
 			break;
 		case 4:
-			Tipo = "flot";
+			TIPO = "flot";
 			break;
 		case 6:
 		case 7:
 			if (!(existe(LEXEMA))) {
 				VAL = VAL + "doblep\t" + LEXEMA + "\r\n";
 				System.out.println("[" + VAL + "]");
-				creaRenglonDeLaTabla(LEXEMA, Tipo);
+				creaRenglonDeLaTabla(LEXEMA, TIPO);
 			} else {
-				System.out.println("Error semántico, variable duplicada (" + RENGLON + ", " + LEXEMA + ")");
+				System.out.println("Error semantico. Variable duplicada (" + RENGLON + ", " + LEXEMA + ")");
 				System.exit(4);
 			}
 			break;
@@ -700,42 +717,80 @@ public class ParserSLR1Generador {
 				VAL = LEXEMA;
 
 			} else {
-				System.out.println("Error semántico, instrucción muestra debe recibir un entero (" + RENGLON + ", "
+				System.out.println("Error semantico. Instrucción muestra debe recibir un entero (" + RENGLON + ", "
 						+ LEXEMA + ")");
 				System.exit(4);
 			}
+			break;
+		case 14:
+			if (existe(LEXEMA)) {
+				LVAR = LEXEMA;
+			} else {
+				System.out.println(
+						"Error semantico. Estas usando una variable no declarada (" + RENGLON + ", " + LEXEMA + ")");
+				System.exit(4);
+			}
+			break;
+		case 27:
+			VAL = LEXEMA;
 			break;
 		}
 	}
 
 	public static void GC_REDUCE(int X) {
 		switch (X) {
+		case -1:
+			PROG_cod[++tPROG_cod] = VARS_cod[tVARS_cod--] + BLQ_cod[tBLQ_cod--];
+			System.out.println("\nCodigo generado:\n");
+			System.out.println(PROG_cod[tPROG_cod]);
+			break;
+		case -4:
+			VARS_cod[++tVARS_cod] = VAL;
+			break;
 		case -5:
+			Temp0 = BLQ_cod[tBLQ_cod--] + INST_cod[tINST_cod--];
+			BLQ_cod[++tBLQ_cod] = Temp0;
 			break;
 		case -6:
 			BLQ_cod[++tBLQ_cod] = INST_cod[tINST_cod--];
-			System.out.println(BLQ_cod[tBLQ_cod]);
+			break;
+		case -8:
+			INST_cod[++tINST_cod] = ASIG_cod[tASIG_cod--];
 			break;
 		case -9:
 			INST_cod[++tINST_cod] = DUMP_cod[tDUMP_cod--];
-			System.out.println(INST_cod[tINST_cod]);
 			break;
 		case -10:
-			DUMP_cod[++tDUMP_cod] = "vuel\t" + VAL;
-			System.out.println(DUMP_cod[tDUMP_cod]);
+			DUMP_cod[++tDUMP_cod] = "vuel\t" + VAL + "\r\n";
+			break;
+		case -13:
+			ASIG_cod[++tASIG_cod] = "mue\t" + E_cod[tE_cod--] + "e, " + LVAR + "\r\n";
+			break;
+		case -21:
+			Temp0 = "mue\t" + E_cod[tE_cod--] + "e, RA\r\n" + "sume\t" + T_cod[tT_cod--] + "e\r";
+			E_cod[tE_cod++] = Temp0;
+			break;
+		case -23:
+			E_cod[++tE_cod] = T_cod[tT_cod--];
+			break;
+		case -26:
+			T_cod[++tT_cod] = F_cod[tF_cod--];
+			break;
+		case -27:
+			F_cod[++tF_cod] = VAL;
 			break;
 		}
 	}
 
 	public static void creaRenglonDeLaTabla(String Variable, String Tipo) {
 		iSYM++;
-		VAR[iSYM] = Variable;
-		TIPO[iSYM] = Tipo;
+		SymVAR[iSYM] = Variable;
+		SymTIPO[iSYM] = Tipo;
 	}
 
 	public static boolean existe(String Variable) {
 		for (int i = 0; i <= iSYM; i++) {
-			if (VAR[i].equals(Variable)) {
+			if (SymVAR[i].equals(Variable)) {
 				return true;
 			}
 		}
@@ -746,7 +801,7 @@ public class ParserSLR1Generador {
 		System.out.println("i\tVAR\tTIPO");
 		System.out.println("==================================");
 		for (int i = 0; i <= iSYM; i++) {
-			System.out.println(i + "\t" + VAR[i] + "\t" + TIPO[i]);
+			System.out.println(i + "\t" + SymVAR[i] + "\t" + SymTIPO[i]);
 		}
 	}
 }
