@@ -683,15 +683,24 @@ public class ParserSLR1Generador {
 	static int tPROG_cod = -1;
 	static String F_cod[] = new String[100];
 	static int tF_cod = -1;
+	static String F_res[] = new String[100];
+	static int tF_res = -1;
 	static String T_cod[] = new String[100];
 	static int tT_cod = -1;
+	static String T_res[] = new String[100];
+	static int tT_res = -1;
 	static String E_cod[] = new String[100];
 	static int tE_cod = -1;
+	static String E_res[] = new String[100];
+	static int tE_res = -1;
 	static String ASIG_cod[] = new String[100];
 	static int tASIG_cod = -1;
 
 	// Variables temporales
-	static String Temp0 = "";
+	static String Temp0 = ""; // Partir Lineas de Java
+	static int ContVarTemp = 0;
+	static String T0 = "";
+	static String T1 = "";
 
 	public static void GC_SHIFT(int X) {
 		switch (X) {
@@ -767,19 +776,79 @@ public class ParserSLR1Generador {
 			ASIG_cod[++tASIG_cod] = "mue\t" + E_cod[tE_cod--] + "e, " + LVAR + "\r\n";
 			break;
 		case -21:
-			Temp0 = "mue\t" + E_cod[tE_cod--] + "e, RA\r\n" + "sume\t" + T_cod[tT_cod--] + "e\r";
-			E_cod[tE_cod++] = Temp0;
+			T0 = GenVar();
+			Temp0 = E_cod[tE_cod--] + T_cod[tT_cod--];
+			Temp0 += "\t\tmue\t\t" + E_res[tE_res--] + ", RA\n";
+			Temp0 += "\t\tsume\t\t" + T_res[tT_res--] + "\n";
+			Temp0 += "\t\tmue\t\t" + "RA, " + T0 + "\n";
+			E_cod[++tE_cod] = Temp0;
+			E_res[++tE_res] = T0;
+
+			System.out.println("Nodo E.cod padre:\n" + E_cod[tE_cod]);
+			System.out.println("Nodo E.res hijo:\n" + E_res[tE_res]);
+
+			break;
+		case -22:
+			T0 = GenVar();
+			Temp0 = E_cod[tE_cod--] + T_cod[tT_cod--];
+			Temp0 += "\t\tmue\t\t" + E_res[tE_res--] + ", RA\n";
+			Temp0 += "\t\tsube\t\t" + T_res[tT_res--] + "\n";
+			Temp0 += "\t\tmue\t\t" + "RA, " + T0 + "\n";
+			E_cod[++tE_cod] = Temp0;
+			E_res[++tE_res] = T0;
+
+			System.out.println("Nodo E.cod padre:\n" + E_cod[tE_cod]);
+			System.out.println("Nodo E.res hijo:\n" + E_res[tE_res]);
+
 			break;
 		case -23:
 			E_cod[++tE_cod] = T_cod[tT_cod--];
+			E_res[++tE_res] = T_res[tT_res--];
+			break;
+		case -24:
+			T0 = GenVar();
+			Temp0 = T_cod[tT_cod--] + F_cod[tF_cod--];
+			Temp0 += "\t\tmue\t\t" + T_res[tT_res--] + ", RA\n";
+			Temp0 += "\t\tmule\t\t" + F_res[tF_res--] + "\n";
+			Temp0 += "\t\tmue\t\t" + "RA, " + T0 + "\n";
+			T_cod[++tT_cod] = Temp0;
+			T_res[++tT_res] = T0;
+
+			System.out.println("Nodo T.cod padre:\n" + T_cod[tT_cod]);
+			System.out.println("Nodo T.res hijo:\n" + T_res[tT_res]);
+
+			break;
+		case -25:
+			T0 = GenVar();
+			Temp0 = T_cod[tT_cod--] + F_cod[tF_cod--];
+			Temp0 += "\t\tmue\t\t" + T_res[tT_res--] + ", RA\n";
+			Temp0 += "\t\tdive\t\t" + F_res[tF_res--] + "\n";
+			Temp0 += "\t\tmue\t\t" + "RA, " + T0 + "\n";
+			T_cod[++tT_cod] = Temp0;
+			T_res[++tT_res] = T0;
+
+			System.out.println("Nodo T.cod padre:\n" + T_cod[tT_cod]);
+			System.out.println("Nodo T.res hijo:\n" + T_res[tT_res]);
+
 			break;
 		case -26:
 			T_cod[++tT_cod] = F_cod[tF_cod--];
+			T_res[++tT_res] = F_res[tF_res--];
 			break;
 		case -27:
-			F_cod[++tF_cod] = VAL;
+			T0 = GenVar();
+			F_cod[++tF_cod] = "\t\tmue\t\t" + VAL + "e, " + T0 + "\n";
+			F_res[++tF_res] = T0;
+			break;
+		case -29:
+			F_cod[++tF_cod] = E_cod[tE_cod--];
+			F_res[++tF_res] = E_res[tE_res--];
 			break;
 		}
+	}
+
+	public static String GenVar() {
+		return "VT" + (ContVarTemp++);
 	}
 
 	public static void creaRenglonDeLaTabla(String Variable, String Tipo) {
