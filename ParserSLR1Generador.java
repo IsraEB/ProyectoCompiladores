@@ -695,6 +695,10 @@ public class ParserSLR1Generador {
 	static int tE_res = -1;
 	static String ASIG_cod[] = new String[100];
 	static int tASIG_cod = -1;
+	static String EXPAR_cod[] = new String[100];
+	static int tEXPAR_cod = -1;
+	static String EXPAR_res[] = new String[100];
+	static int tEXPAR_res = -1;
 
 	// Variables temporales
 	static String Temp0 = ""; // Partir Lineas de Java
@@ -713,8 +717,7 @@ public class ParserSLR1Generador {
 		case 6:
 		case 7:
 			if (!(existe(LEXEMA))) {
-				VAL = VAL + "doblep\t" + LEXEMA + "\r\n";
-				System.out.println("[" + VAL + "]");
+				VAL = VAL + "\t\tdoblep\t\t" + LEXEMA + "\r\n";
 				creaRenglonDeLaTabla(LEXEMA, TIPO);
 			} else {
 				System.out.println("Error semantico. Variable duplicada (" + RENGLON + ", " + LEXEMA + ")");
@@ -724,7 +727,6 @@ public class ParserSLR1Generador {
 		case 22:
 			if (tipoNumero.equals("ent")) {
 				VAL = LEXEMA;
-
 			} else {
 				System.out.println("Error semantico. Instrucción muestra debe recibir un entero (" + RENGLON + ", "
 						+ LEXEMA + ")");
@@ -778,6 +780,15 @@ public class ParserSLR1Generador {
 		case -13:
 			ASIG_cod[++tASIG_cod] = E_cod[tE_cod--] + "\t\tmue\t\t" + E_res[tE_res--] + ", " + LVAR + "\r\n";
 			break;
+		case -14:
+			tEXPAR_cod = tEXPAR_cod + 1;
+			EXPAR_cod[tEXPAR_cod] = E_cod[tE_cod - 1] + E_cod[tE_cod];
+			EXPAR_cod[tEXPAR_cod] = EXPAR_cod[tEXPAR_cod] + "\t\tmue\t\t" + E_res[tE_res - 1] + ", RA\r\n";
+			EXPAR_cod[tEXPAR_cod] = EXPAR_cod[tEXPAR_cod] + "\t\tmue\t\t" + E_res[tE_res] + ", RB\r\n";
+			EXPAR_cod[tEXPAR_cod] = EXPAR_cod[tEXPAR_cod] + "\t\tcmpe\t\tRA, RB\r\n";
+
+			System.out.println("EXPAR_cod: \n" + EXPAR_cod[tEXPAR_cod]);
+			break;
 		case -21:
 			T0 = GenVar();
 			Temp0 = E_cod[tE_cod--] + T_cod[tT_cod--];
@@ -786,10 +797,6 @@ public class ParserSLR1Generador {
 			Temp0 += "\t\tmue\t\t" + "RA, " + T0 + "\n";
 			E_cod[++tE_cod] = Temp0;
 			E_res[++tE_res] = T0;
-
-			System.out.println("Nodo E.cod padre:\n" + E_cod[tE_cod]);
-			System.out.println("Nodo E.res hijo:\n" + E_res[tE_res]);
-
 			break;
 		case -22:
 			T0 = GenVar();
@@ -799,10 +806,6 @@ public class ParserSLR1Generador {
 			Temp0 += "\t\tmue\t\t" + "RA, " + T0 + "\n";
 			E_cod[++tE_cod] = Temp0;
 			E_res[++tE_res] = T0;
-
-			System.out.println("Nodo E.cod padre:\n" + E_cod[tE_cod]);
-			System.out.println("Nodo E.res hijo:\n" + E_res[tE_res]);
-
 			break;
 		case -23:
 			E_cod[++tE_cod] = T_cod[tT_cod--];
@@ -816,10 +819,6 @@ public class ParserSLR1Generador {
 			Temp0 += "\t\tmue\t\t" + "RA, " + T0 + "\n";
 			T_cod[++tT_cod] = Temp0;
 			T_res[++tT_res] = T0;
-
-			System.out.println("Nodo T.cod padre:\n" + T_cod[tT_cod]);
-			System.out.println("Nodo T.res hijo:\n" + T_res[tT_res]);
-
 			break;
 		case -25:
 			T0 = GenVar();
@@ -829,10 +828,6 @@ public class ParserSLR1Generador {
 			Temp0 += "\t\tmue\t\t" + "RA, " + T0 + "\n";
 			T_cod[++tT_cod] = Temp0;
 			T_res[++tT_res] = T0;
-
-			System.out.println("Nodo T.cod padre:\n" + T_cod[tT_cod]);
-			System.out.println("Nodo T.res hijo:\n" + T_res[tT_res]);
-
 			break;
 		case -26:
 			T_cod[++tT_cod] = F_cod[tF_cod--];
