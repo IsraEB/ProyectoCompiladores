@@ -743,6 +743,9 @@ public class ParserSLR1Generador {
 		case 27:
 			VAL = LEXEMA;
 			break;
+		case 28:
+			VAL = LEXEMA;
+			break;
 		}
 	}
 
@@ -773,7 +776,7 @@ public class ParserSLR1Generador {
 			DUMP_cod[++tDUMP_cod] = "vuel\t" + VAL + "\r\n";
 			break;
 		case -13:
-			ASIG_cod[++tASIG_cod] = "mue\t" + E_cod[tE_cod--] + "e, " + LVAR + "\r\n";
+			ASIG_cod[++tASIG_cod] = E_cod[tE_cod--] + "\t\tmue\t\t" + E_res[tE_res--] + ", " + LVAR + "\r\n";
 			break;
 		case -21:
 			T0 = GenVar();
@@ -839,6 +842,10 @@ public class ParserSLR1Generador {
 			T0 = GenVar();
 			F_cod[++tF_cod] = "\t\tmue\t\t" + VAL + "e, " + T0 + "\n";
 			F_res[++tF_res] = T0;
+			break;
+		case -28:
+			F_cod[++tF_cod] = "";
+			F_res[++tF_res] = VAL;
 			break;
 		case -29:
 			F_cod[++tF_cod] = E_cod[tE_cod--];

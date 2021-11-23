@@ -1,4 +1,5 @@
 entero a
+entero b
 comienza
-	a:=5*(8-11)/17
+	b := 3 + a / 5
 termina
