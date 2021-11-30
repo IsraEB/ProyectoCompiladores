@@ -699,6 +699,8 @@ public class ParserSLR1Generador {
 	static int tEXPAR_cod = -1;
 	static String EXPAR_res[] = new String[100];
 	static int tEXPAR_res = -1;
+	static String IF_cod[] = new String[100];
+	static int tIF_cod = -1;
 
 	// Variables temporales
 	static String Temp0 = ""; // Partir Lineas de Java
@@ -708,144 +710,155 @@ public class ParserSLR1Generador {
 
 	public static void GC_SHIFT(int X) {
 		switch (X) {
-		case 3:
-			TIPO = "ent";
-			break;
-		case 4:
-			TIPO = "flot";
-			break;
-		case 6:
-		case 7:
-			if (!(existe(LEXEMA))) {
-				VAL = VAL + "\t\tdoblep\t\t" + LEXEMA + "\r\n";
-				creaRenglonDeLaTabla(LEXEMA, TIPO);
-			} else {
-				System.out.println("Error semantico. Variable duplicada (" + RENGLON + ", " + LEXEMA + ")");
-				System.exit(4);
-			}
-			break;
-		case 22:
-			if (tipoNumero.equals("ent")) {
+			case 3:
+				TIPO = "ent";
+				break;
+			case 4:
+				TIPO = "flot";
+				break;
+			case 6:
+			case 7:
+				if (!(existe(LEXEMA))) {
+					VAL = VAL + "\t\tdoblep\t\t" + LEXEMA + "\r\n";
+					creaRenglonDeLaTabla(LEXEMA, TIPO);
+				} else {
+					System.out.println("Error semantico. Variable duplicada (" + RENGLON + ", " + LEXEMA + ")");
+					System.exit(4);
+				}
+				break;
+			case 14:
+				if (existe(LEXEMA)) {
+					LVAR = LEXEMA;
+				} else {
+					System.out.println(
+							"Error semantico. Estas usando una variable no declarada (" + RENGLON + ", " + LEXEMA
+									+ ")");
+					System.exit(4);
+				}
+				break;
+			case 22:
+				if (tipoNumero.equals("ent")) {
+					VAL = LEXEMA;
+				} else {
+					System.out.println("Error semantico. Instrucción muestra debe recibir un entero (" + RENGLON + ", "
+							+ LEXEMA + ")");
+					System.exit(4);
+				}
+				break;
+			case 27:
 				VAL = LEXEMA;
-			} else {
-				System.out.println("Error semantico. Instrucción muestra debe recibir un entero (" + RENGLON + ", "
-						+ LEXEMA + ")");
-				System.exit(4);
-			}
-			break;
-		case 14:
-			if (existe(LEXEMA)) {
-				LVAR = LEXEMA;
-			} else {
-				System.out.println(
-						"Error semantico. Estas usando una variable no declarada (" + RENGLON + ", " + LEXEMA + ")");
-				System.exit(4);
-			}
-			break;
-		case 27:
-			VAL = LEXEMA;
-			break;
-		case 28:
-			VAL = LEXEMA;
-			break;
+				break;
+			case 28:
+				VAL = LEXEMA;
+				break;
 		}
 	}
 
 	public static void GC_REDUCE(int X) {
 		switch (X) {
-		case -1:
-			PROG_cod[++tPROG_cod] = VARS_cod[tVARS_cod--] + BLQ_cod[tBLQ_cod--];
-			System.out.println("\nCodigo generado:\n");
-			System.out.println(PROG_cod[tPROG_cod]);
-			break;
-		case -4:
-			VARS_cod[++tVARS_cod] = VAL;
-			break;
-		case -5:
-			Temp0 = BLQ_cod[tBLQ_cod--] + INST_cod[tINST_cod--];
-			BLQ_cod[++tBLQ_cod] = Temp0;
-			break;
-		case -6:
-			BLQ_cod[++tBLQ_cod] = INST_cod[tINST_cod--];
-			break;
-		case -8:
-			INST_cod[++tINST_cod] = ASIG_cod[tASIG_cod--];
-			break;
-		case -9:
-			INST_cod[++tINST_cod] = DUMP_cod[tDUMP_cod--];
-			break;
-		case -10:
-			DUMP_cod[++tDUMP_cod] = "vuel\t" + VAL + "\r\n";
-			break;
-		case -13:
-			ASIG_cod[++tASIG_cod] = E_cod[tE_cod--] + "\t\tmue\t\t" + E_res[tE_res--] + ", " + LVAR + "\r\n";
-			break;
-		case -14:
-			tEXPAR_cod = tEXPAR_cod + 1;
-			EXPAR_cod[tEXPAR_cod] = E_cod[tE_cod - 1] + E_cod[tE_cod];
-			EXPAR_cod[tEXPAR_cod] = EXPAR_cod[tEXPAR_cod] + "\t\tmue\t\t" + E_res[tE_res - 1] + ", RA\r\n";
-			EXPAR_cod[tEXPAR_cod] = EXPAR_cod[tEXPAR_cod] + "\t\tmue\t\t" + E_res[tE_res] + ", RB\r\n";
-			EXPAR_cod[tEXPAR_cod] = EXPAR_cod[tEXPAR_cod] + "\t\tcmpe\t\tRA, RB\r\n";
+			case -1:
+				PROG_cod[++tPROG_cod] = VARS_cod[tVARS_cod--] + BLQ_cod[tBLQ_cod--];
+				System.out.println("\nCodigo generado:\n");
+				System.out.println(PROG_cod[tPROG_cod]);
+				break;
+			case -4:
+				VARS_cod[++tVARS_cod] = VAL;
+				break;
+			case -5:
+				Temp0 = BLQ_cod[tBLQ_cod--] + INST_cod[tINST_cod--];
+				BLQ_cod[++tBLQ_cod] = Temp0;
+				break;
+			case -6:
+				BLQ_cod[++tBLQ_cod] = INST_cod[tINST_cod--];
+				break;
+			case -7:
+				INST_cod[++tINST_cod] = IF_cod[tIF_cod--];
+				break;
+			case -8:
+				INST_cod[++tINST_cod] = ASIG_cod[tASIG_cod--];
+				break;
+			case -9:
+				INST_cod[++tINST_cod] = DUMP_cod[tDUMP_cod--];
+				break;
+			case -10:
+				DUMP_cod[++tDUMP_cod] = "vuel\t" + VAL + "\r\n";
+				break;
+			case -12:
+				IF_cod[++tIF_cod] = EXPAR_cod[tEXPAR_cod--] + BLQ_cod[tBLQ_cod--];
+				break;
+			case -13:
+				ASIG_cod[++tASIG_cod] = E_cod[tE_cod--] + "\t\tmue\t\t" + E_res[tE_res--] + ", " + LVAR + "\r\n";
+				break;
+			case -14:
+				tEXPAR_cod = tEXPAR_cod + 1;
 
-			System.out.println("EXPAR_cod: \n" + EXPAR_cod[tEXPAR_cod]);
-			break;
-		case -21:
-			T0 = GenVar();
-			Temp0 = E_cod[tE_cod--] + T_cod[tT_cod--];
-			Temp0 += "\t\tmue\t\t" + E_res[tE_res--] + ", RA\n";
-			Temp0 += "\t\tsume\t\t" + T_res[tT_res--] + "\n";
-			Temp0 += "\t\tmue\t\t" + "RA, " + T0 + "\n";
-			E_cod[++tE_cod] = Temp0;
-			E_res[++tE_res] = T0;
-			break;
-		case -22:
-			T0 = GenVar();
-			Temp0 = E_cod[tE_cod--] + T_cod[tT_cod--];
-			Temp0 += "\t\tmue\t\t" + E_res[tE_res--] + ", RA\n";
-			Temp0 += "\t\tsube\t\t" + T_res[tT_res--] + "\n";
-			Temp0 += "\t\tmue\t\t" + "RA, " + T0 + "\n";
-			E_cod[++tE_cod] = Temp0;
-			E_res[++tE_res] = T0;
-			break;
-		case -23:
-			E_cod[++tE_cod] = T_cod[tT_cod--];
-			E_res[++tE_res] = T_res[tT_res--];
-			break;
-		case -24:
-			T0 = GenVar();
-			Temp0 = T_cod[tT_cod--] + F_cod[tF_cod--];
-			Temp0 += "\t\tmue\t\t" + T_res[tT_res--] + ", RA\n";
-			Temp0 += "\t\tmule\t\t" + F_res[tF_res--] + "\n";
-			Temp0 += "\t\tmue\t\t" + "RA, " + T0 + "\n";
-			T_cod[++tT_cod] = Temp0;
-			T_res[++tT_res] = T0;
-			break;
-		case -25:
-			T0 = GenVar();
-			Temp0 = T_cod[tT_cod--] + F_cod[tF_cod--];
-			Temp0 += "\t\tmue\t\t" + T_res[tT_res--] + ", RA\n";
-			Temp0 += "\t\tdive\t\t" + F_res[tF_res--] + "\n";
-			Temp0 += "\t\tmue\t\t" + "RA, " + T0 + "\n";
-			T_cod[++tT_cod] = Temp0;
-			T_res[++tT_res] = T0;
-			break;
-		case -26:
-			T_cod[++tT_cod] = F_cod[tF_cod--];
-			T_res[++tT_res] = F_res[tF_res--];
-			break;
-		case -27:
-			T0 = GenVar();
-			F_cod[++tF_cod] = "\t\tmue\t\t" + VAL + "e, " + T0 + "\n";
-			F_res[++tF_res] = T0;
-			break;
-		case -28:
-			F_cod[++tF_cod] = "";
-			F_res[++tF_res] = VAL;
-			break;
-		case -29:
-			F_cod[++tF_cod] = E_cod[tE_cod--];
-			F_res[++tF_res] = E_res[tE_res--];
-			break;
+				EXPAR_cod[tEXPAR_cod] = "";
+				EXPAR_cod[tEXPAR_cod] += E_cod[tE_cod - 1] + E_cod[tE_cod];
+				EXPAR_cod[tEXPAR_cod] += "\t\tmue\t\t" + E_res[tE_res - 1] + ", RA\r\n";
+				EXPAR_cod[tEXPAR_cod] += "\t\tmue\t\t" + E_res[tE_res] + ", RB\r\n";
+				EXPAR_cod[tEXPAR_cod] += "\t\tcmpe\t\tRA, RB\r\n";
+
+				tE_cod = tE_cod - 2;
+				tE_res = tE_res - 2;
+
+				break;
+			case -21:
+				T0 = GenVar();
+				Temp0 = E_cod[tE_cod--] + T_cod[tT_cod--];
+				Temp0 += "\t\tmue\t\t" + E_res[tE_res--] + ", RA\n";
+				Temp0 += "\t\tsume\t\t" + T_res[tT_res--] + "\n";
+				Temp0 += "\t\tmue\t\t" + "RA, " + T0 + "\n";
+				E_cod[++tE_cod] = Temp0;
+				E_res[++tE_res] = T0;
+				break;
+			case -22:
+				T0 = GenVar();
+				Temp0 = E_cod[tE_cod--] + T_cod[tT_cod--];
+				Temp0 += "\t\tmue\t\t" + E_res[tE_res--] + ", RA\n";
+				Temp0 += "\t\tsube\t\t" + T_res[tT_res--] + "\n";
+				Temp0 += "\t\tmue\t\t" + "RA, " + T0 + "\n";
+				E_cod[++tE_cod] = Temp0;
+				E_res[++tE_res] = T0;
+				break;
+			case -23:
+				E_cod[++tE_cod] = T_cod[tT_cod--];
+				E_res[++tE_res] = T_res[tT_res--];
+				break;
+			case -24:
+				T0 = GenVar();
+				Temp0 = T_cod[tT_cod--] + F_cod[tF_cod--];
+				Temp0 += "\t\tmue\t\t" + T_res[tT_res--] + ", RA\n";
+				Temp0 += "\t\tmule\t\t" + F_res[tF_res--] + "\n";
+				Temp0 += "\t\tmue\t\t" + "RA, " + T0 + "\n";
+				T_cod[++tT_cod] = Temp0;
+				T_res[++tT_res] = T0;
+				break;
+			case -25:
+				T0 = GenVar();
+				Temp0 = T_cod[tT_cod--] + F_cod[tF_cod--];
+				Temp0 += "\t\tmue\t\t" + T_res[tT_res--] + ", RA\n";
+				Temp0 += "\t\tdive\t\t" + F_res[tF_res--] + "\n";
+				Temp0 += "\t\tmue\t\t" + "RA, " + T0 + "\n";
+				T_cod[++tT_cod] = Temp0;
+				T_res[++tT_res] = T0;
+				break;
+			case -26:
+				T_cod[++tT_cod] = F_cod[tF_cod--];
+				T_res[++tT_res] = F_res[tF_res--];
+				break;
+			case -27:
+				T0 = GenVar();
+				F_cod[++tF_cod] = "\t\tmue\t\t" + VAL + "e, " + T0 + "\n";
+				F_res[++tF_res] = T0;
+				break;
+			case -28:
+				F_cod[++tF_cod] = "";
+				F_res[++tF_res] = VAL;
+				break;
+			case -29:
+				F_cod[++tF_cod] = E_cod[tE_cod--];
+				F_res[++tF_res] = E_res[tE_res--];
+				break;
 		}
 	}
 

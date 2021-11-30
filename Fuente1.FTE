@@ -1,7 +1,10 @@
 entero a
 entero b
 comienza
-	si (3 = 4)
+	si (3 = 4) entonces
+		b := 3
+	finsi
+	si (a = b) entonces
 		b := 3
 	finsi
 termina

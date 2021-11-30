@@ -2,6 +2,7 @@ entero Suma27   // variable para el total
 entero a   // variable para el total
 entero b   // variable para el total
 flotante X11
+entero X
 
 /* Este es un [programa de prueba
 es el primero que hago*/
